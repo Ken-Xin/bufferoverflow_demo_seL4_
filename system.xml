@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+    <!-- 共有メモリ領域の定義 -->
+    <memory_region name="shared_memory" size="0x200000" phys_addr="0x40000000" />
+    
+    <!-- サーバー Protection Domain -->
+    <protection_domain name="server" priority="100">
+        <program_image path="server.elf" />
+        <map mr="shared_memory" vaddr="0x4000000" perms="rw" cached="true" 
+             setvar_vaddr="shared_mem_vaddr" setvar_size="shared_mem_size" />
+    </protection_domain>
+    
+    <!-- クライアント Protection Domain -->
+    <protection_domain name="client" priority="50">
+        <program_image path="client.elf" />
+        <map mr="shared_memory" vaddr="0x4000000" perms="rw" cached="true" 
+             setvar_vaddr="shared_mem_vaddr" setvar_size="shared_mem_size" />
+    </protection_domain>
+    
+    <!-- クライアントとサーバー間のチャネル -->
+    <channel>
+        <end pd="client" id="1" />
+        <end pd="server" id="1" />
+    </channel>
+</system>

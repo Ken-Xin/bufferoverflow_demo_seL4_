@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+    <!-- 共有メモリ領域 -->
+    <memory_region name="shared_memory" size="0x200000" phys_addr="0x40000000" />
+    <memory_region name="log_buffer" size="0x100000" phys_addr="0x50000000" />
+    
+    <!-- サーバー Protection Domain -->
+    <protection_domain name="server" priority="100">
+        <program_image path="server.elf" />
+        <map mr="shared_memory" vaddr="0x4000000" perms="rw" cached="true" 
+             setvar_vaddr="shared_mem_vaddr" setvar_size="shared_mem_size" />
+    </protection_domain>
+    
+    <!-- クライアント Protection Domain -->
+    <protection_domain name="client" priority="50">
+        <program_image path="client.elf" />
+        <map mr="shared_memory" vaddr="0x4000000" perms="rw" cached="true" 
+             setvar_vaddr="shared_mem_vaddr" setvar_size="shared_mem_size" />
+    </protection_domain>
+    
+    <!-- ロガー Protection Domain (最高優先度) -->
+    <protection_domain name="logger" priority="150">
+        <program_image path="logger.elf" />
+        <map mr="log_buffer" vaddr="0x5000000" perms="rw" cached="true" 
+             setvar_vaddr="log_buffer_vaddr" setvar_size="log_buffer_size" />
+    </protection_domain>
+    
+    <!-- チャネル設定 -->
+    <channel>
+        <end pd="client" id="1" />
+        <end pd="server" id="1" />
+    </channel>
+    
+    <channel>
+        <end pd="client" id="2" />
+        <end pd="logger" id="1" />
+    </channel>
+    
+    <channel>
+        <end pd="server" id="2" />
+        <end pd="logger" id="2" />
+    </channel>
+</system>
