@@ -149,7 +149,7 @@ make run
 Press `Ctrl+A`, then press `X`
 
 ## Project Structure
-
+```
 seL4_project/
 ├── Makefile # Build automation
 ├── util.h # String/memory utility functions
@@ -170,7 +170,7 @@ seL4_project/
 │
 ├── microkit-sdk/ # Microkit SDK
 └── README.md # This file
-
+```
 
 ##  Key Concepts
 
